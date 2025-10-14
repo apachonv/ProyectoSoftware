@@ -1,40 +1,41 @@
 from flask import Flask, request, jsonify
 import smtplib
 from email.mime.text import MIMEText
+import requests
 
 app = Flask(__name__)
 
+API_KEY="1234"
+
 # Configuración del correo
-GMAIL_USER = "tu_correo@gmail.com"
-GMAIL_PASSWORD = "tu_contraseña_de_aplicación"
+GMAIL_USER = "bolsos.vargachi@gmail.com"
+GMAIL_PASSWORD = "bobcoezrhqphdsff" 
 
-@app.route('/send-email', methods=['POST'])
+@app.before_request
+def verificar_api_key():
+    print("llego al flask", flush=True)
+    api_key_recibida = request.headers.get("X-API-Key")
+    
+    if api_key_recibida != API_KEY:
+        return jsonify({"message": "Acceso Denegado Desde El Flask"}), 403
+    
+@app.route('/enviar-mensaje', methods=['POST'])
 def send_email():
-    data = request.json  # Recibe los datos desde el request
-    nombre = data.get("nombre")
-    asunto = data.get("asunto")
-    mensaje_extra = data.get("mensaje")
-
-    if not nombre or not asunto or not mensaje_extra:
-        return jsonify({"error": "Faltan campos"}), 400
-
-    # Construimos el mensaje dinámico
-    mensaje = f"Hola {nombre},\n\n{mensaje_extra}\n\nSaludos,\nEquipo Flask"
-
+    mensaje = request.json
+    
     try:
         msg = MIMEText(mensaje)
         msg['From'] = GMAIL_USER
-        msg['To'] = "destinatario_fijo@gmail.com"  # destinatario fijo
-        msg['Subject'] = asunto
+        msg['To'] = "apachonv@unal.edu.co"  # destinatario fijo
+        msg['Subject'] = "Nueva Reservacion"
 
         # Conexión SMTP
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
         server.login(GMAIL_USER, GMAIL_PASSWORD)
-        server.sendmail(GMAIL_USER, "destinatario_fijo@gmail.com", msg.as_string())
+        server.sendmail(GMAIL_USER, "apachonv@unal.edu.co", msg.as_string())
         server.quit()
-
-        return jsonify({"status": "Correo enviado"}), 200
+        return jsonify({"message": "Correo enviado correctamente"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

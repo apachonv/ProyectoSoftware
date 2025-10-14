@@ -32,8 +32,9 @@ class ReservationsController extends Controller
      */
     public function store(Request $request)
     {
-        $url = $this->apiUrlPagos . '/procesar_pago';
-        $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->post($url, $request->all());
+        
+        $urlpagos = $this->apiUrlPagos . '/procesar_pago';
+        $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->post($urlpagos, $request->all());
         return $response->json();
     }
 

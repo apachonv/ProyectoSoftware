@@ -30,8 +30,14 @@ class ReservationController extends Controller
      */
     public function store(Request $request)
     {
-        $reservation = Reservation::create($request->all());
-        return response()->json(['message'=> 'Se almaceno la reserva', $reservation]);
+        $reservation = new Reservation();
+        $reservation->room_id = (int) $request->room_id;
+        $reservation->user_id = (int) $request->user_id;
+        $reservation->check_in_date = $request->check_in_date;
+        $reservation->check_out_date = $request->check_out_date;
+        $reservation->total_price = $request->total_price;
+        $reservation->save();
+        return response()->json(['message'=> 'Se almaceno la reserva', "Info"=>$reservation]);
     }
 
     /**
@@ -39,7 +45,7 @@ class ReservationController extends Controller
      */
     public function show(int $id)
     {
-        Log::info('Entró al show');
+
         $reservations = Reservation::where('user_id', $id)->get();
         return response()->json($reservations); 
     }

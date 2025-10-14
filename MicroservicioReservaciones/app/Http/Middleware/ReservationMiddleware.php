@@ -20,7 +20,7 @@ class ReservationMiddleware
         $ApiKeyReceived = $request->header("X-API-key");
         $ApiKey = env("API_KEY");
         if ($ApiKeyReceived !== $ApiKey ){
-            return response()->json(["message"=>"Acceso Denegado"], 403);
+            return response()->json(["message"=>"Acceso Denegado Desde Resevations"], 403);
         }
         return $next($request);
     }
