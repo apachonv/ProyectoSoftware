@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoomsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware(['room'])->group(function () {
+
+    Route::get('/rooms', [RoomsController::class, 'index']);
+    Route::get('/rooms/{room}', [RoomsController::class, 'show']);
+    Route::post('/rooms', [RoomsController::class, 'store']);
+    Route::put('/rooms/{room}', [RoomsController::class, 'update']);
+    Route::delete('/rooms/{room}', [RoomsController::class, 'destroy']);
+    
 });
+

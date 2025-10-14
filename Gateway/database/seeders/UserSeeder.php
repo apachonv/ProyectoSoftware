@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
                 'role_id' => 1,
                 'name' => 'Aleja',
                 'email' => 'aleja@gmail.com',
-                'password' => bcrypt('1243')
+                'password' => bcrypt('1234')
             ],
             [
                 'role_id' => 2,
