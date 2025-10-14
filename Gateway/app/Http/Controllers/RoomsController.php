@@ -43,7 +43,6 @@ class RoomsController extends Controller
     public function store(Request $request)
     {
         $url = $this->apiUrl . '/rooms/';
-        
         $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->post($url, $request->all());
         //dd($response->status(), $response->body());
         return $response->json();

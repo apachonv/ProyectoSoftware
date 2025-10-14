@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('room_id')->constrained('rooms')->onDelete('cascade');
-            $table->string('customer_name');
-            $table->string('customer_email');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->date('check_in_date');
             $table->date('check_out_date');
             $table->decimal('total_price', 10, 2);
