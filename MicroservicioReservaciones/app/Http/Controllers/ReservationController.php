@@ -30,7 +30,8 @@ class ReservationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $reservation = Reservation::create($request->all());
+        return response()->json(['message'=> 'Se almaceno la reserva', $reservation]);
     }
 
     /**

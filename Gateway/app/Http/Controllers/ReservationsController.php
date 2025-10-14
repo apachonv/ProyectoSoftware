@@ -10,11 +10,13 @@ use App\Models\Reservation;
 class ReservationsController extends Controller
 {
     protected $apiUrl;
+    protected $apiUrlPagos;
     protected $apiKey;
 
     public function __construct()
     {
         $this->apiUrl = env('MICROSERVICIO_RESERVACIONES');
+        $this->apiUrlPagos = env('MICROSERVICIO_PAGOS');
         $this->apiKey = env('API_KEY');
     }
 
@@ -30,7 +32,7 @@ class ReservationsController extends Controller
      */
     public function store(Request $request)
     {
-        $url = $this->apiUrl . '/pays/';
+        $url = $this->apiUrlPagos . '/procesar_pago';
         $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->post($url, $request->all());
         return $response->json();
     }
@@ -38,7 +40,7 @@ class ReservationsController extends Controller
     public function storeUser(Request $request)
     {
         $request->user_id = Auth::id();
-        $url = $this->apiUrl . '/pays/';
+        $url = $this->apiUrlPagos . '/procesar_pago';
         $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->post($url, $request->all());
         return $response->json();
     }
