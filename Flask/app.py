@@ -21,7 +21,8 @@ def verificar_api_key():
     
 @app.route('/enviar-mensaje', methods=['POST'])
 def send_email():
-    mensaje = request.json
+    data = request.json
+    mensaje = data.get("mensaje")
     
     try:
         msg = MIMEText(mensaje)
@@ -35,7 +36,7 @@ def send_email():
         server.login(GMAIL_USER, GMAIL_PASSWORD)
         server.sendmail(GMAIL_USER, "apachonv@unal.edu.co", msg.as_string())
         server.quit()
-        return jsonify({"message": "Correo enviado correctamente"}), 200
+        return jsonify({"message": "Correo enviado correctamente y guardado en BD"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

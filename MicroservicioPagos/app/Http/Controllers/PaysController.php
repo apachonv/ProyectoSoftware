@@ -73,21 +73,35 @@ class PaysController extends Controller
             return response()->json(['message' => 'Fondos insuficientes.'], 400);
         }
 
-        DB::beginTransaction();
-
-        $mensaje = "El Cliente {$user->name},acaba de hacer una reservacion desde {$check_in_date} hastas {$check_out_date} en la habitacion {$room->room_number}.";
+        $mensaje = "El Cliente {$user->name} acaba de hacer una reservacion desde {$check_in_date} hasta {$check_out_date} en la habitacion {$room->room_number}.";
 
         try {
             $user->account -= $total_price;
             $user->save();
-            $url = $this->apiUrl . '/enviar-mensaje';
-            $notificationResponse = Http::withHeaders(['X-API-Key' => $this->apiKey])->post($url, $mensaje);
+
             $urlReservation = $this->apiUrlReservations . '/reservations';
-            $reservationResponse = Http::withHeaders(['X-API-Key' => $this->apiKey])->post($urlReservation, $request->all());
-            return $reservationResponse->json();
+            $reservationResponse = Http::withHeaders([
+                'X-API-Key' => $this->apiKey
+            ])->post($urlReservation, $request->all());
+                
+            
+            if ($reservationResponse->successful()) {  
+                $urlNotification = $this->apiUrl . '/enviar-mensaje';
+                $notificationResponse = Http::withHeaders([
+                    'X-API-Key' => $this->apiKey
+                ])->post($urlNotification, ['mensaje' => $mensaje]);
+                
+                return $notificationResponse->json();
+
+            } else {
+    
+                return response()->json([
+                    'message' => 'No se pudo enviar la notificación, no se creó la reservación',
+                    'error' => $reservationResponse->body()
+                ], 500);
             }
 
-        catch (\Exception $e) {
+        }catch (\Exception $e) {
             return response()->json(['message' => 'Error procesando la reserva.', 'error' => $e->getMessage()], 500);
         }
     }
