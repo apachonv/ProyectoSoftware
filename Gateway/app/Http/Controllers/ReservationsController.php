@@ -46,13 +46,7 @@ class ReservationsController extends Controller
         return $response->json();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-
-    /**
-     * Display the specified resource.
-     */
+    
     public function showUser()
     {
         $id = Auth::id();
@@ -115,6 +109,13 @@ class ReservationsController extends Controller
     {
         $url = $this->apiUrl . '/reservations/'. $id;
         $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->delete($url);
+        return $response->json();
+    }
+
+    public function createReport()
+    {
+        $url = $this->apiUrl . '/report/';
+        $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->get($url);
         return $response->json();
     }
 }

@@ -26,6 +26,7 @@ class AutenticationController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'account'=> $request->account,
             'role_id' => 2
         ]);
 

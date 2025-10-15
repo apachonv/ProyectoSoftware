@@ -31,6 +31,7 @@ Route::middleware('auth:api', 'role:Admin')->group(function () {
     Route::post('/rooms', [RoomsController::class, 'store']);
     Route::put('/rooms/{room}', [RoomsController::class, 'update']);
     Route::delete('/rooms/{room}', [RoomsController::class, 'destroy']);
+    Route::get('/report', [ReservationsController::class, 'createReport']);
     
     
 });
@@ -42,7 +43,7 @@ Route::middleware('auth:api', 'role:Admin|Recepcionista')->group(function () {
     Route::get('/reservations', [ReservationsController::class, 'index']);
     Route::get('/rooms/{room}', [RoomsController::class, 'show']);
     Route::get('/reservations/{reservation}', [ReservationsController::class, 'show']);
-    Route::post('/reservations', [ReservationsController::class, 'store']);####
+    Route::post('/reservations', [ReservationsController::class, 'store']);
     Route::put('/reservations/{reservation}', [ReservationsController::class, 'update']);
     Route::delete('/reservations/{reservation}', [ReservationsController::class, 'destroy']);
     
@@ -50,10 +51,9 @@ Route::middleware('auth:api', 'role:Admin|Recepcionista')->group(function () {
 });
 
 Route::middleware('auth:api', 'role:Cliente')->group(function () {
-
     
     Route::get('/roomsUser', [RoomsController::class, 'index']);
-    Route::post('/reservationsUser', [ReservationsController::class, 'storeUser']);###
+    Route::post('/reservationsUser', [ReservationsController::class, 'storeUser']);
     Route::get('/reservationsUser', [ReservationsController::class, 'showUser']);
     Route::delete('/reservationsUser/{id}', [ReservationsController::class, 'destroyUser']);
     

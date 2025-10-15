@@ -36,6 +36,7 @@ class ReservationController extends Controller
         $reservation->check_in_date = $request->check_in_date;
         $reservation->check_out_date = $request->check_out_date;
         $reservation->total_price = $request->total_price;
+        $reservation->status = "confirmed";
         $reservation->save();
         return response()->json(['message'=> 'Se almaceno la reserva', "Info"=>$reservation]);
     }
