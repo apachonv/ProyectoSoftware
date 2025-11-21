@@ -1,0 +1,104 @@
+services:
+  gateway:
+    build:
+      context: ./Gateway
+      dockerfile: Dockerfile
+    container_name: gateway
+    ports:
+      - "8000:8000"
+    working_dir: /var/www/html/
+    tty: true
+    stdin_open: true
+    depends_on:
+      - habitaciones
+      - reservaciones
+      - pagos
+      - db
+    networks:
+      red_proyecto:
+        ipv4_address: 192.168.50.2
+    command: sh -c "composer update && php artisan key:generate && php artisan migrate:refresh && php artisan db:seed && php artisan serve --host=0.0.0.0 --port=8000"
+
+  habitaciones:
+    build:
+      context: ./MicroservicioHabitaciones
+      dockerfile: Dockerfile
+    container_name: habitaciones
+    ports:
+      - "8001:8000"
+    working_dir: /var/www/html/
+    tty: true
+    stdin_open: true
+    networks:
+      red_proyecto:
+        ipv4_address: 192.168.50.3
+    command: sh -c "composer update && php artisan key:generate && php artisan serve --host=0.0.0.0 --port=8000"
+
+  reservaciones:
+    build:
+      context: ./MicroservicioReservaciones
+      dockerfile: Dockerfile
+    container_name: reservaciones
+    ports:
+      - "8002:8000"
+    working_dir: /var/www/html/
+    tty: true
+    stdin_open: true
+    networks:
+      red_proyecto:
+        ipv4_address: 192.168.50.4
+    command: sh -c "composer update && php artisan key:generate && php artisan serve --host=0.0.0.0 --port=8000"
+
+  pagos:
+    build:
+      context: ./MicroservicioPagos
+      dockerfile: Dockerfile
+    container_name: pagos
+    ports:
+      - "8003:8000"
+    working_dir: /var/www/html/
+    tty: true
+    stdin_open: true
+    depends_on:
+      - notificaciones
+    networks:
+      red_proyecto:
+        ipv4_address: 192.168.50.5
+    command: sh -c "composer update && php artisan key:generate && php artisan serve --host=0.0.0.0 --port=8000"
+
+  notificaciones:
+    build:
+      context: .
+      dockerfile: Dockerfile.Flask
+    container_name: notificaciones
+    ports:
+      - "5000:5000"
+    working_dir: /app
+    networks:
+      red_proyecto:
+        ipv4_address: 192.168.50.6
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: proyectosoftware
+      MYSQL_USER: root
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      red_proyecto:
+        ipv4_address: 192.168.50.7
+
+networks:
+  red_proyecto:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.50.0/24
+
+volumes:
+  dbdata:

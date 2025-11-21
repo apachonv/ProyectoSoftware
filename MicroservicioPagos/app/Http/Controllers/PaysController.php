@@ -16,7 +16,7 @@ class PaysController extends Controller
     protected $apiUrl;
     protected $apiKey;
     protected $apiUrlReservations;
-    
+
 
     public function __construct()
     {
@@ -26,7 +26,7 @@ class PaysController extends Controller
     }
     public function pagar(Request $request)
     {
-        
+
         $user_id = $request->user_id;
         $room_id = $request->room_id;
         $check_in = $request->check_in_date;
@@ -47,14 +47,13 @@ class PaysController extends Controller
             return response()->json(['message' => 'La habitación ya está ocupada en esas fechas.'], 400);
         }
 
-        
+
         $room = Room::find($room_id);
         if (!$room) {
             return response()->json(['message' => 'Habitación no encontrada.'], 404);
         }
 
         $price_per_night = $room->price_per_night;
-
         $check_in_date = Carbon::parse($check_in);
         $check_out_date = Carbon::parse($check_out);
         $nights = $check_out_date->diffInDays($check_in_date);
@@ -63,7 +62,7 @@ class PaysController extends Controller
             'total_price' => $total_price
         ]);
 
-         
+
         $user = User::find($user_id);
         if (!$user) {
             return response()->json(['message' => 'Usuario no encontrado.'], 404);
@@ -83,18 +82,18 @@ class PaysController extends Controller
             $reservationResponse = Http::withHeaders([
                 'X-API-Key' => $this->apiKey
             ])->post($urlReservation, $request->all());
-                
-            
-            if ($reservationResponse->successful()) {  
+
+
+            if ($reservationResponse->successful()) {
                 $urlNotification = $this->apiUrl . '/enviar-mensaje';
                 $notificationResponse = Http::withHeaders([
                     'X-API-Key' => $this->apiKey
                 ])->post($urlNotification, ['mensaje' => $mensaje]);
-                
+
                 return $notificationResponse->json();
 
             } else {
-    
+
                 return response()->json([
                     'message' => 'No se pudo enviar la notificación, no se creó la reservación',
                     'error' => $reservationResponse->body()

@@ -13,6 +13,7 @@ class ReservationController extends Controller
      */
     public function index()
     {
+
         $rooms = Reservation::all();
         return response()->json($rooms);
     }
@@ -48,7 +49,7 @@ class ReservationController extends Controller
     {
 
         $reservations = Reservation::where('user_id', $id)->get();
-        return response()->json($reservations); 
+        return response()->json($reservations);
     }
 
     /**
@@ -77,7 +78,7 @@ class ReservationController extends Controller
         $reservation->check_out_date = $request->check_out_date;
         $reservation->total_price = $request->total_price;
         $reservation->save();
-        return response()->json(['message'=> 'Se modfico', $reservation]); 
+        return response()->json(['message'=> 'Se modfico', $reservation]);
     }
 
     /**

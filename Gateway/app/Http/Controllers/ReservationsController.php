@@ -32,7 +32,7 @@ class ReservationsController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $urlpagos = $this->apiUrlPagos . '/procesar_pago';
         $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->post($urlpagos, $request->all());
         return $response->json();
@@ -40,13 +40,13 @@ class ReservationsController extends Controller
 
     public function storeUser(Request $request)
     {
-        $request->user_id = Auth::id();
+        $request->merge(['user_id'=> (string) Auth::id()]);
         $url = $this->apiUrlPagos . '/procesar_pago';
         $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->post($url, $request->all());
         return $response->json();
     }
 
-    
+
     public function showUser()
     {
         $id = Auth::id();
@@ -92,7 +92,7 @@ class ReservationsController extends Controller
             return response()->json(['message' => 'Reservación no encontrada'], 404);
         }
 
-        
+
         if ($reservation->user_id !== $user) {
             return response()->json(['message' => 'No tienes permiso para cancelar esta reservación'], 403);
         }
@@ -100,9 +100,9 @@ class ReservationsController extends Controller
         $url = $this->apiUrl . '/reservationsUser/'. $id;
         $response = Http::withHeaders(['X-API-Key' => $this->apiKey])->delete($url);
         return $response->json();
-        
-        
-        
+
+
+
     }
 
     public function destroy(string $id)

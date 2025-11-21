@@ -27,7 +27,7 @@ class AutenticationController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'account'=> $request->account,
-            'role_id' => 2
+            'role_id' => 3
         ]);
 
         return response()->json([

@@ -31,7 +31,7 @@ class RoomsController extends Controller
     public function store(Request $request)
     {
         $room = Room::create($request->all());
-        return response()->json(['message'=> 'Se guardo', $room]); 
+        return response()->json(['message'=> 'Se guardo', $room]);
 
     }
 
@@ -41,7 +41,7 @@ class RoomsController extends Controller
     public function show(string $id)
     {
         $room = Room::find($id);
-        return response()->json($room); 
+        return response()->json($room);
     }
 
     /**
@@ -49,7 +49,7 @@ class RoomsController extends Controller
      */
     public function edit(string $id)
     {
-        
+
     }
 
     /**
@@ -69,7 +69,7 @@ class RoomsController extends Controller
         $room->price_per_night = $request->price_per_night;
         $room->status = $request->status;
         $room->save();
-        return response()->json(['message'=> 'Se modfico', $room]); 
+        return response()->json(['message'=> 'Se modfico', $room]);
     }
 
     /**
@@ -79,6 +79,6 @@ class RoomsController extends Controller
     {
         $room = Room::find($id);
         $room->delete();
-        return response()->json(['message' => 'Transacción eliminada']);
+        return response()->json(['message' => 'Habitacion eliminada']);
     }
 }
