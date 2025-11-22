@@ -69,7 +69,7 @@ services:
   notificaciones:
     build:
       context: .
-      dockerfile: ../Dockerfile.Flask
+      dockerfile: Dockerfile.Flask
     container_name: notificaciones
     ports:
       - "5000:5000"
