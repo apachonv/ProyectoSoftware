@@ -87,7 +87,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: proyectosoftware
       MYSQL_USER: user
-      MYSQL_PASSWORD: 
+      MYSQL_PASSWORD:
     volumes:
       - dbdata:/var/lib/mysql
     networks:
